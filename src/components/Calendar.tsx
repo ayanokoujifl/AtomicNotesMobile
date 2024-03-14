@@ -73,7 +73,7 @@ export function Calendar() {
           return (
             <Pressable
               className={clsx(
-                "bg-slate-700 mx-1 mb-2 size-12 max-w-12 rounded-full text-center flex justify-center items-center  flex-1 mr-auto select-none cursor-pointer active:bg-slate-500",
+                "bg-slate-700 mx-1 mb-2 size-12 max-w-12 rounded-full text-center flex justify-center items-center  flex-1 select-none active:bg-slate-500",
                 currentDay === day.item && "!bg-lime-400 active:!bg-lime-600"
               )}
             >

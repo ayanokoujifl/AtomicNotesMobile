@@ -10,6 +10,9 @@ module.exports = {
         semi: "FiraCode_600SemiBold",
         stronger: "FiraCode_700Bold",
       },
+      boxShadow: {
+        "3xl": "2px -4px 2px 2px rgb(101 163 13)",
+      },
     },
   },
   plugins: [],

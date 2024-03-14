@@ -1,39 +1,29 @@
+import { Calendar } from "@/components/Calendar"
 import { Header } from "@/components/Header"
-import { NoteCard } from "@/components/NoteCard"
+import { NoteCard } from "@/components/Note/NoteCard"
 import { useEffect, useState } from "react"
-import { StatusBar, Text, View } from "react-native"
+import { ScrollView, Text, View } from "react-native"
+import { NoteProps } from "./notes"
 
-export type NoteProps = {
-  uuid: string
-  title: string
-  content: string
-  category: number
-  createdAt: Date
-  isRead: boolean
-}
-
-export default function Notes() {
+export default function Home() {
   const [notes, setNotes] = useState<NoteProps[]>([])
 
   async function getNotes() {
     const response: NoteProps[] = await fetch(
-      `http://192.168.0.14:8080/notes`
+      `http://192.168.0.6:8080/notes`
     ).then((response) => response.json())
     setNotes(response)
   }
-
   useEffect(() => {
     getNotes()
   }, [notes])
 
   return (
-    <View className="flex-1 px-4 pt-10">
-      <StatusBar translucent />
+    <View className="flex-1 bg-slate-900">
       <Header />
-      <Text className="text-slate-200 font-base ml-2 text-lg mb-2">
-        Minhas notas:
-      </Text>
-      <View className="gap-4">
+      <Calendar />
+      <Text className="ml-4 text-slate-200 font-stronger text-lg">Notas:</Text>
+      <ScrollView className="gap-4 mx-4 flex-1 pb-10">
         {notes.length <= 0 ? (
           <NoteCard />
         ) : (
@@ -41,7 +31,7 @@ export default function Notes() {
             return <NoteCard key={note.uuid} note={note} />
           })
         )}
-      </View>
+      </ScrollView>
     </View>
   )
 }

@@ -1,13 +1,14 @@
 import { Alert } from "react-native"
 
-export async function deleteNote(uuid: string) {
+export async function deleteSchedule(uuid: string) {
   try {
     const response: Response = await fetch(
-      `http://192.168.0.10:8080/notes/${uuid}`,
+      `http://192.168.0.10:8080/schedules/${uuid}`,
       {
         method: "DELETE",
       }
-    ).then((response) => response.json())
+    )
+    return response
   } catch (err: any) {
     Alert.alert("Erro", err)
   }

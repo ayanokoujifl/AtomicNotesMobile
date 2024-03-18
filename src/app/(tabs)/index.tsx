@@ -10,7 +10,7 @@ export default function Home() {
 
   async function getNotes() {
     const response: NoteProps[] = await fetch(
-      `http://192.168.0.6:8080/notes`
+      "http://192.168.0.10:8080/notes"
     ).then((response) => response.json())
     setNotes(response)
   }

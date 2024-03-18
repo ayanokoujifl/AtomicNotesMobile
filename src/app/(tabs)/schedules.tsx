@@ -32,7 +32,7 @@ export default function Schedules() {
 
   async function getSchedules() {
     const response: ScheduleProps[] = await fetch(
-      `http://192.168.0.6:8080/schedules`
+      `http://192.168.0.10:8080/schedules`
     ).then((response) => response.json())
     setSchedules(response)
   }

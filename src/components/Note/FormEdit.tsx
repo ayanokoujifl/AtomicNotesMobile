@@ -9,6 +9,7 @@ import {
 import { ChevronDown, ListTodo, NotebookPen, Pin, X } from "lucide-react-native"
 import { Controller, useForm } from "react-hook-form"
 import {
+  Alert,
   Modal,
   Pressable,
   Text,
@@ -40,10 +41,12 @@ export function FormEdit({
   const { control, handleSubmit, reset, getValues } = useForm<FormData>()
 
   async function handleEditNote(body: SaveNoteRequestProps, uuid: string) {
-    console.log(body.category)
     const response = await updateNote(body, uuid)
+    console.log(response?.status)
     if (response?.status === 204) {
       toast.show("Edição de nota concluída", { type: "success" })
+    } else {
+      Alert.alert("EEROO")
     }
     onHide()
     reset()
@@ -115,7 +118,7 @@ export function FormEdit({
                     {
                       title: e.title ? e.title : note.title,
                       content: e.content ? e.content : note.content,
-                      category: e.category,
+                      category: e.category ? e.category : note.category,
                       isRead: false,
                     },
                     note.uuid

@@ -1,57 +1,38 @@
-import { saveSchedule } from "@/api/saveSchedule"
-import {
-  ChevronDown,
-  ListTodo,
-  MessageCircleCode,
-  NotebookPen,
-  Pin,
-  X,
-} from "lucide-react-native"
+import { RATES, ScheduleProps } from "@/app/(tabs)/schedules"
+import { DatePicker } from "@/lib/date-time-picker/DatePicker"
+import { ChevronDown, MessageCircleCode, Pin, X } from "lucide-react-native"
 import { Controller, useForm } from "react-hook-form"
 import { Modal, Text, TouchableWithoutFeedback, View } from "react-native"
 import { SelectList } from "react-native-dropdown-select-list"
-import { useToast } from "react-native-toast-notifications"
 import colors from "tailwindcss/colors"
 import { Button } from "../Button"
 import { Input } from "../Input"
-import { DatePicker } from "@/lib/date-time-picker/DatePicker"
-import { useState } from "react"
+import { SaveScheduleRequestProps } from "./SaveSchedule"
 
-type SaveScheduleProps = {
+type EditModalProps = {
+  rates: { key: number; value: string }[]
   isVisible: boolean
   onHide: () => void
-  rates: { key: number; value: string }[]
+  schedule: ScheduleProps
 }
 
-export type SaveScheduleRequestProps = {
-  title: string
-  rate: number
-  schedule: string
-}
-
-export function SaveSchedule({ isVisible, onHide, rates }: SaveScheduleProps) {
-  const { control, handleSubmit, reset } = useForm<SaveScheduleRequestProps>()
-
-  const toast = useToast()
-
-  async function handleSaveSchedule(data: SaveScheduleRequestProps) {
-    const body: SaveScheduleRequestProps = {
-      title: data.title ? data.title : "TESTE",
-      rate: data.rate ? data.rate : 0,
-      schedule: data.schedule ? data.schedule : "",
-    }
-    const response = await saveSchedule(body)
-    if (response?.status === 201) {
-      toast.show("Lembrete criado!", { type: "scheduleCreated" })
-    } else {
-      toast.show("Falha na criação de lembrete", { type: "error" })
-    }
-    onHide()
-    reset()
-  }
+export function EditModal({
+  isVisible,
+  onHide,
+  rates,
+  schedule,
+}: EditModalProps) {
+  const { control, handleSubmit, reset, getValues } =
+    useForm<SaveScheduleRequestProps>()
+  function handleEditSchedule() {}
 
   return (
-    <Modal visible={isVisible} transparent animationType="fade">
+    <Modal
+      visible={isVisible}
+      transparent
+      statusBarTranslucent
+      animationType="slide"
+    >
       <TouchableWithoutFeedback onPress={onHide}>
         <View className=" flex flex-1 justify-center items-center">
           <View className=" bg-gray-800 w-3/4 p-4 border-2 border-lime-600 rounded-lg shadow-3xl">
@@ -72,6 +53,7 @@ export function SaveSchedule({ isVisible, onHide, rates }: SaveScheduleProps) {
                 icon={MessageCircleCode}
                 name="title"
                 placeholder="Type a title"
+                value={schedule.title ? schedule.title : ""}
               />
               <Controller
                 name="rate"
@@ -115,13 +97,17 @@ export function SaveSchedule({ isVisible, onHide, rates }: SaveScheduleProps) {
               <Controller
                 name="schedule"
                 control={control}
-                render={({ field: { onChange, name } }) => (
-                  <DatePicker dateTimeChanged={onChange} />
+                render={({ field: { onChange } }) => (
+                  <DatePicker
+                    dateTimeChanged={(dateTime) => {
+                      onChange(dateTime)
+                    }}
+                  />
                 )}
               />
               <Button.Root
                 className="bg-slate-700 p-4 flex-row gap-3 items-center rounded-md active:bg-slate-950"
-                onPress={handleSubmit(handleSaveSchedule)}
+                onPress={handleSubmit(handleEditSchedule)}
               >
                 <Button.Icon icon={Pin} size={24} color={colors.lime[500]} />
                 <Button.Content>Salvar nota</Button.Content>

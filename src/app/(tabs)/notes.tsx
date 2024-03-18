@@ -1,8 +1,8 @@
 import { Button } from "@/components/Button"
-import { FormNote } from "@/components/Note/FormNote"
 import { Header } from "@/components/Header"
+import { FormNote } from "@/components/Note/FormNote"
 import { NoteCard } from "@/components/Note/NoteCard"
-import { Notebook, NotebookPen, PlusCircle } from "lucide-react-native"
+import { Notebook, PlusCircle } from "lucide-react-native"
 import { useEffect, useState } from "react"
 import { ScrollView, StatusBar, Text, View } from "react-native"
 import colors from "tailwindcss/colors"
@@ -25,7 +25,7 @@ export default function Notes() {
 
   async function getNotes() {
     const response: NoteProps[] = await fetch(
-      `http://192.168.0.6:8080/notes`
+      "http://192.168.0.10:8080/notes"
     ).then((response) => response.json())
     setNotes(response)
   }

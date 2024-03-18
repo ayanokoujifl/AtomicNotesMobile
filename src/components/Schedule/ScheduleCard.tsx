@@ -1,4 +1,4 @@
-import { ScheduleProps } from "@/app/(tabs)/schedules"
+import { RATES, ScheduleProps } from "@/app/(tabs)/schedules"
 import { AlarmClock } from "lucide-react-native"
 import { Text } from "react-native"
 import colors from "tailwindcss/colors"
@@ -8,9 +8,10 @@ import { useState } from "react"
 
 type ScheduleCardProps = {
   schedule?: ScheduleProps
+  rates: { key: number; value: string }[]
 }
 
-export function ScheduleCard({ schedule }: ScheduleCardProps) {
+export function ScheduleCard({ schedule, rates }: ScheduleCardProps) {
   if (!schedule) {
     return (
       <Text className="text-slate-400 bg-slate-700 px-5 py-3 rounded-md  active:bg-slate-600">
@@ -33,6 +34,7 @@ export function ScheduleCard({ schedule }: ScheduleCardProps) {
         isVisible={isInfoVisible}
         onHide={hideInfo}
         schedule={schedule}
+        rates={rates}
       />
     </>
   )

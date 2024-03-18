@@ -1,31 +1,28 @@
-import { Modal, Text, TouchableWithoutFeedback, View } from "react-native"
-import { Button } from "../Button"
+import { deleteSchedule } from "@/api/deleSchedule"
+import { ScheduleProps } from "@/app/(tabs)/schedules"
 import { CheckCircle2, X } from "lucide-react-native"
-import colors from "tailwindcss/colors"
-import { NoteProps } from "@/app/(tabs)/notes"
-import { deleteNote } from "@/api/deleteNote"
+import { Modal, Text, TouchableWithoutFeedback, View } from "react-native"
 import { useToast } from "react-native-toast-notifications"
+import colors from "tailwindcss/colors"
+import { Button } from "../Button"
 
 type DeleteModalProps = {
   isVisible: boolean
   onHide: () => void
-  note: NoteProps
+  schedule: ScheduleProps
 }
 
-export function DeleteModal({ isVisible, onHide, note }: DeleteModalProps) {
+export function DeleteModal({ isVisible, onHide, schedule }: DeleteModalProps) {
   const toast = useToast()
-
-  async function handleDeleteNote() {
-    if (note) {
-      await deleteNote(note.uuid)
-      toast.show("Nota deletada", {
-        type: "success",
-        animationType: "slide-in",
-      })
+  async function handleDeleteSchedule() {
+    const response = await deleteSchedule(schedule.uuid)
+    if (response?.status === 202) {
+      onHide()
+      toast.show("Lembrete deletado", { type: "scheduleDeleted" })
     } else {
-      toast.show("Algo deu errado!", { type: "error" })
+      onHide()
+      toast.show("Falha na deleção", { type: "error" })
     }
-    onHide()
   }
 
   return (
@@ -34,11 +31,11 @@ export function DeleteModal({ isVisible, onHide, note }: DeleteModalProps) {
         <View className="flex-1 justify-center items-center px-4">
           <View className="bg-gray-800 border-2 border-slate-200 p-4 rounded-md shadow-lg shadow-black">
             <Text className="text-xl text-lime-500 font-stronger mb-4">
-              Exclusão de nota
+              Exclusão de lembrete
             </Text>
             <View>
               <Text className="text-base text-slate-200 font-semi">
-                Tem certeza que deseja excluir sua nota?
+                Tem certeza que deseja excluir seu lembrete?
               </Text>
             </View>
             <View className="mt-4 flex-row w-full gap-4">
@@ -48,7 +45,7 @@ export function DeleteModal({ isVisible, onHide, note }: DeleteModalProps) {
                 </Button.Content>
                 <Button.Icon icon={X} size={20} color={colors.red[600]} />
               </Button.Root>
-              <Button.Root onPress={handleDeleteNote}>
+              <Button.Root onPress={handleDeleteSchedule}>
                 <Button.Content className="text-base text-slate-200 font-light -ml-2 text-center flex-1">
                   Deletar
                 </Button.Content>

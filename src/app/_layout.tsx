@@ -11,8 +11,16 @@ import { Slot } from "expo-router"
 import { SafeAreaView, StatusBar, Text, View } from "react-native"
 import { ToastProvider } from "react-native-toast-notifications"
 import "../global.css"
-import { AlarmClockCheck, CheckCircle2, X, XCircle } from "lucide-react-native"
+import {
+  AlarmClockCheck,
+  AlarmClockMinus,
+  CheckCircle2,
+  X,
+  XCircle,
+} from "lucide-react-native"
 import colors from "tailwindcss/colors"
+import { DatePicker } from "@/lib/date-time-picker/DatePicker"
+import { Header } from "@/components/Header"
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -33,7 +41,7 @@ export default function Layout() {
         success: (toast) => (
           <View className="bg-gray-200 px-8 py-4 rounded-md flex-row gap-4 items-center">
             <CheckCircle2 size={24} color={colors.emerald[500]} />
-            <Text className="font-bold text-slate-900 text-lg">
+            <Text className="font-stronger text-slate-900 text-lg">
               {toast.message}
             </Text>
           </View>
@@ -41,7 +49,7 @@ export default function Layout() {
         error: (toast) => (
           <View className="bg-gray-200 px-8 py-4 rounded-md flex-row gap-4 items-center">
             <XCircle size={24} color={colors.red[500]} />
-            <Text className="font-bold text-slate-900 text-lg">
+            <Text className="font-stronger text-slate-900 text-lg">
               {toast.message}
             </Text>
           </View>
@@ -54,7 +62,20 @@ export default function Layout() {
               absoluteStrokeWidth
               strokeWidth={3}
             />
-            <Text className="font-bold text-slate-900 text-lg">
+            <Text className="font-stronger text-slate-900 text-lg">
+              {toast.message}
+            </Text>
+          </View>
+        ),
+        scheduleDeleted: (toast) => (
+          <View className="bg-gray-200 px-8 py-4 rounded-md flex-row gap-4 items-center">
+            <AlarmClockMinus
+              size={24}
+              color={colors.red[500]}
+              absoluteStrokeWidth
+              strokeWidth={3}
+            />
+            <Text className="font-stronger text-slate-900 text-lg">
               {toast.message}
             </Text>
           </View>

@@ -8,7 +8,7 @@ import { useState } from "react"
 
 type ScheduleCardProps = {
   schedule?: ScheduleProps
-  rates: { key: number; value: string }[]
+  rates?: { key: number; value: string }[]
 }
 
 export function ScheduleCard({ schedule, rates }: ScheduleCardProps) {
@@ -34,7 +34,7 @@ export function ScheduleCard({ schedule, rates }: ScheduleCardProps) {
         isVisible={isInfoVisible}
         onHide={hideInfo}
         schedule={schedule}
-        rates={rates}
+        rates={rates ? rates : []}
       />
     </>
   )

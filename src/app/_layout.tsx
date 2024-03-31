@@ -14,6 +14,7 @@ import "../global.css"
 import {
   AlarmClockCheck,
   AlarmClockMinus,
+  AlarmClockOff,
   CheckCircle2,
   X,
   XCircle,
@@ -21,6 +22,7 @@ import {
 import colors from "tailwindcss/colors"
 import { DatePicker } from "@/lib/date-time-picker/DatePicker"
 import { Header } from "@/components/Header"
+import { Notification } from "@/components/Notification"
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -80,6 +82,27 @@ export default function Layout() {
             </Text>
           </View>
         ),
+        scheduleUpdated: (toast) => (
+          <View className="bg-gray-200 px-8 py-4 rounded-md flex-row gap-4 items-center">
+            <AlarmClockCheck
+              size={24}
+              color={colors.amber[500]}
+              absoluteStrokeWidth
+              strokeWidth={3}
+            />
+            <Text className="font-stronger text-slate-900 text-lg">
+              {toast.message}
+            </Text>
+          </View>
+        ),
+        scheduleError: (toast) => (
+          <View className="bg-gray-200 px-8 py-4 rounded-md flex-row gap-4 items-center">
+            <AlarmClockOff size={24} color={colors.red[500]} />
+            <Text className="font-stronger text-slate-900 text-lg">
+              {toast.message}
+            </Text>
+          </View>
+        ),
       }}
     >
       <SafeAreaView className="flex-1 pt-10 bg-slate-900">
@@ -88,7 +111,7 @@ export default function Layout() {
           translucent
           barStyle={"light-content"}
         />
-        <Slot />
+        <Notification />
       </SafeAreaView>
     </ToastProvider>
   )

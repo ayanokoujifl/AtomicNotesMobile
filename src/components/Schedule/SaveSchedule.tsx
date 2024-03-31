@@ -124,7 +124,7 @@ export function SaveSchedule({ isVisible, onHide, rates }: SaveScheduleProps) {
                 onPress={handleSubmit(handleSaveSchedule)}
               >
                 <Button.Icon icon={Pin} size={24} color={colors.lime[500]} />
-                <Button.Content>Salvar nota</Button.Content>
+                <Button.Content>Salvar lembrete</Button.Content>
               </Button.Root>
             </View>
           </View>

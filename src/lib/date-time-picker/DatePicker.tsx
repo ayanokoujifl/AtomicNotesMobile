@@ -3,12 +3,14 @@ import { useState } from "react"
 import { Pressable, Text, View } from "react-native"
 import colors from "tailwindcss/colors"
 import { CalendarPicker } from "./CalendarPicker"
+import clsx from "clsx"
 
 type DatePickerProps = {
   dateTimeChanged: (dateTime: string) => void
+  value?: String
 }
 
-export function DatePicker({ dateTimeChanged }: DatePickerProps) {
+export function DatePicker({ dateTimeChanged, value }: DatePickerProps) {
   const [date, setDate] = useState<string>()
   const [time, setTime] = useState<string>()
 
@@ -39,15 +41,26 @@ export function DatePicker({ dateTimeChanged }: DatePickerProps) {
         ) : (
           <View className="flex-row flex-1 justify-between items-center">
             <View className="px-2">
-              <AlarmClock size={24} color={colors.slate[400]} />
+              {value ? (
+                <AlarmClockCheck size={24} color={colors.lime[400]} />
+              ) : (
+                <AlarmClock size={24} color={colors.slate[400]} />
+              )}
             </View>
             <View className="border-r-2 border-lime-600 h-16" />
-            <Text className="text-slate-500 text-left flex-1 px-6">
-              Pick a date
+            <Text
+              className={clsx(
+                "text-left flex-1 px-6",
+                value ? "text-slate-200 text-center" : "text-slate-500"
+              )}
+            >
+              {value ? value.replace("T", " | ") : "Pick a Date"}
             </Text>
-            <View className="mr-2">
-              <ChevronDown size={24} color={colors.slate[400]} className="" />
-            </View>
+            {!value && (
+              <View className="mr-2">
+                <ChevronDown size={24} color={colors.slate[400]} className="" />
+              </View>
+            )}
           </View>
         )}
       </Pressable>

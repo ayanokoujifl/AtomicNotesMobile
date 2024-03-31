@@ -10,7 +10,7 @@ export default function Home() {
 
   async function getNotes() {
     const response: NoteProps[] = await fetch(
-      "http://192.168.0.10:8080/notes"
+      process.env.EXPO_PUBLIC_API_URL + "/notes"
     ).then((response) => response.json())
     setNotes(response)
   }

@@ -3,7 +3,7 @@ import { Alert } from "react-native"
 export async function deleteSchedule(uuid: string) {
   try {
     const response: Response = await fetch(
-      `http://192.168.0.10:8080/schedules/${uuid}`,
+      `${process.env.EXPO_PUBLIC_API_URL}/schedules/${uuid}`,
       {
         method: "DELETE",
       }

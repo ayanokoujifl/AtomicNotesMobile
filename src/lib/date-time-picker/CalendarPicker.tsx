@@ -108,8 +108,10 @@ export function CalendarPicker({
   function handleTimeChanged(hours: string, minutes: string) {
     setHours(hours)
     setMinutes(minutes)
+    const month = currentMonth + 1
+    console.log(month)
     const date = `${new Date().getFullYear().toString()}-${String(
-      currentMonth + 1
+      month
     ).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`
     const time = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
       2,

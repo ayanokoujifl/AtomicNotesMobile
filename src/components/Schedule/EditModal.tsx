@@ -1,9 +1,11 @@
-import { RATES, ScheduleProps } from "@/app/(tabs)/schedules"
+import { updateSchedule } from "@/api/editSchedule"
+import { ScheduleProps } from "@/app/(tabs)/schedules"
 import { DatePicker } from "@/lib/date-time-picker/DatePicker"
 import { ChevronDown, MessageCircleCode, Pin, X } from "lucide-react-native"
 import { Controller, useForm } from "react-hook-form"
 import { Modal, Text, TouchableWithoutFeedback, View } from "react-native"
 import { SelectList } from "react-native-dropdown-select-list"
+import { useToast } from "react-native-toast-notifications"
 import colors from "tailwindcss/colors"
 import { Button } from "../Button"
 import { Input } from "../Input"
@@ -22,9 +24,26 @@ export function EditModal({
   rates,
   schedule,
 }: EditModalProps) {
+  const toast = useToast()
+
   const { control, handleSubmit, reset, getValues } =
     useForm<SaveScheduleRequestProps>()
-  function handleEditSchedule() {}
+
+  async function handleEditSchedule(e: SaveScheduleRequestProps) {
+    const body: SaveScheduleRequestProps = {
+      title: e.title ? e.title : schedule.title,
+      rate: e.rate >= 0 ? e.rate : schedule.rate,
+      schedule: e.schedule ? e.schedule : String(schedule.schedule),
+    }
+    const response = await updateSchedule(body, schedule.uuid)
+    if (response?.status === 204) {
+      toast.show("Lembrete atualizado!", { type: "scheduleUpdated" })
+    } else {
+      toast.show("Falha na atualização!", { type: "scheduleError" })
+    }
+    onHide()
+    reset()
+  }
 
   return (
     <Modal
@@ -53,12 +72,12 @@ export function EditModal({
                 icon={MessageCircleCode}
                 name="title"
                 placeholder="Type a title"
-                value={schedule.title ? schedule.title : ""}
+                defaultValue={schedule.title && schedule.title}
               />
               <Controller
                 name="rate"
                 control={control}
-                render={({ field: { onChange, value } }) => (
+                render={({ field: { onChange } }) => (
                   <SelectList
                     setSelected={(value: number) => {
                       onChange(value)
@@ -102,6 +121,7 @@ export function EditModal({
                     dateTimeChanged={(dateTime) => {
                       onChange(dateTime)
                     }}
+                    value={schedule.schedule && String(schedule.schedule)}
                   />
                 )}
               />
@@ -110,7 +130,7 @@ export function EditModal({
                 onPress={handleSubmit(handleEditSchedule)}
               >
                 <Button.Icon icon={Pin} size={24} color={colors.lime[500]} />
-                <Button.Content>Salvar nota</Button.Content>
+                <Button.Content>Salvar lembrete</Button.Content>
               </Button.Root>
             </View>
           </View>

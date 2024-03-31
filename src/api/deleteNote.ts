@@ -3,7 +3,7 @@ import { Alert } from "react-native"
 export async function deleteNote(uuid: string) {
   try {
     const response: Response = await fetch(
-      `http://192.168.0.10:8080/notes/${uuid}`,
+      `${process.env.EXPO_PUBLIC_API_URL}/notes/${uuid}`,
       {
         method: "DELETE",
       }

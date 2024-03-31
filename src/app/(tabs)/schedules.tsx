@@ -32,7 +32,7 @@ export default function Schedules() {
 
   async function getSchedules() {
     const response: ScheduleProps[] = await fetch(
-      `http://192.168.0.10:8080/schedules`
+      `${process.env.EXPO_PUBLIC_API_URL}/schedules`
     ).then((response) => response.json())
     setSchedules(response)
   }
@@ -72,7 +72,13 @@ export default function Schedules() {
             <ScheduleCard />
           ) : (
             schedules.map((schedule) => {
-              return <ScheduleCard key={schedule.uuid} schedule={schedule} />
+              return (
+                <ScheduleCard
+                  key={schedule.uuid}
+                  schedule={schedule}
+                  rates={RATES}
+                />
+              )
             })
           )}
         </ScrollView>

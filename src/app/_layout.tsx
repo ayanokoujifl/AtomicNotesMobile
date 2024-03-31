@@ -8,21 +8,18 @@ import {
   useFonts,
 } from "@expo-google-fonts/fira-code"
 import { Slot } from "expo-router"
-import { SafeAreaView, StatusBar, Text, View } from "react-native"
-import { ToastProvider } from "react-native-toast-notifications"
-import "../global.css"
 import {
   AlarmClockCheck,
   AlarmClockMinus,
   AlarmClockOff,
   CheckCircle2,
-  X,
   XCircle,
 } from "lucide-react-native"
+import { SafeAreaView, StatusBar, Text, View } from "react-native"
+import { ToastProvider } from "react-native-toast-notifications"
 import colors from "tailwindcss/colors"
-import { DatePicker } from "@/lib/date-time-picker/DatePicker"
-import { Header } from "@/components/Header"
-import { Notification } from "@/components/Notification"
+import "../global.css"
+import { useEffect } from "react"
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -36,6 +33,8 @@ export default function Layout() {
   if (!fontsLoaded) {
     return <Loading />
   }
+
+ 
 
   return (
     <ToastProvider
@@ -111,7 +110,7 @@ export default function Layout() {
           translucent
           barStyle={"light-content"}
         />
-        <Notification />
+        <Slot />
       </SafeAreaView>
     </ToastProvider>
   )

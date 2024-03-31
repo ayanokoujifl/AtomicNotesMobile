@@ -1,12 +1,6 @@
 import { saveSchedule } from "@/api/saveSchedule"
-import {
-  ChevronDown,
-  ListTodo,
-  MessageCircleCode,
-  NotebookPen,
-  Pin,
-  X,
-} from "lucide-react-native"
+import { DatePicker } from "@/lib/date-time-picker/DatePicker"
+import { ChevronDown, MessageCircleCode, Pin, X } from "lucide-react-native"
 import { Controller, useForm } from "react-hook-form"
 import { Modal, Text, TouchableWithoutFeedback, View } from "react-native"
 import { SelectList } from "react-native-dropdown-select-list"
@@ -14,8 +8,9 @@ import { useToast } from "react-native-toast-notifications"
 import colors from "tailwindcss/colors"
 import { Button } from "../Button"
 import { Input } from "../Input"
-import { DatePicker } from "@/lib/date-time-picker/DatePicker"
-import { useState } from "react"
+import * as Notifications from "expo-notifications"
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av"
+import { useEffect } from "react"
 
 type SaveScheduleProps = {
   isVisible: boolean
@@ -29,10 +24,57 @@ export type SaveScheduleRequestProps = {
   schedule: string
 }
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldSetBadge: true,
+    shouldShowAlert: true,
+    priority: Notifications.AndroidNotificationPriority.MAX,
+    shouldPlaySound: true,
+  }),
+})
+
+Audio.setAudioModeAsync({
+  allowsRecordingIOS: false,
+  staysActiveInBackground: true,
+  playsInSilentModeIOS: true,
+  shouldDuckAndroid: true,
+  interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+  playThroughEarpieceAndroid: false,
+  interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+})
+const sound = new Audio.Sound()
+
 export function SaveSchedule({ isVisible, onHide, rates }: SaveScheduleProps) {
   const { control, handleSubmit, reset } = useForm<SaveScheduleRequestProps>()
 
   const toast = useToast()
+
+  async function stopAlarm() {
+    await sound.stopAsync()
+  }
+
+  Notifications.addNotificationReceivedListener(async () => {
+    await loadSound()
+    await sound.playAsync()
+  })
+
+  Notifications.addNotificationResponseReceivedListener((response) => {
+    stopAlarm()
+    sound.unloadAsync()
+  })
+
+  async function loadSound() {
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+    })
+    await sound.loadAsync(require("../../assets/katte.mp4"), {
+      isLooping: true,
+    })
+  }
 
   async function handleSaveSchedule(data: SaveScheduleRequestProps) {
     const body: SaveScheduleRequestProps = {
@@ -48,6 +90,23 @@ export function SaveSchedule({ isVisible, onHide, rates }: SaveScheduleProps) {
     }
     onHide()
     reset()
+    const responseData = await response?.json()
+    scheduleNotify(responseData.title, responseData.rate, responseData.schedule)
+  }
+
+  async function scheduleNotify(title: string, rate: string, schedule: string) {
+    const date = new Date(schedule)
+    console.log(date)
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: title,
+        color: colors.lime[500],
+        body: rate,
+        sound: false,
+        autoDismiss: false,
+      },
+      trigger: null,
+    })
   }
 
   return (

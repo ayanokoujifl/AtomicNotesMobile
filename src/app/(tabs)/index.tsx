@@ -4,9 +4,13 @@ import { NoteCard } from "@/components/Note/NoteCard"
 import { useEffect, useState } from "react"
 import { ScrollView, Text, View } from "react-native"
 import { NoteProps } from "./notes"
+import * as Notifications from "expo-notifications"
 
 export default function Home() {
   const [notes, setNotes] = useState<NoteProps[]>([])
+
+  const requestPermissions = async () =>
+    await Notifications.requestPermissionsAsync()
 
   async function getNotes() {
     const response: NoteProps[] = await fetch(
@@ -16,6 +20,7 @@ export default function Home() {
   }
   useEffect(() => {
     getNotes()
+    requestPermissions()
   }, [notes])
 
   return (

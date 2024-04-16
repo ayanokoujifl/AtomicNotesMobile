@@ -103,9 +103,8 @@ export function SaveSchedule({ isVisible, onHide, rates }: SaveScheduleProps) {
         color: colors.lime[500],
         body: rate,
         sound: false,
-        autoDismiss: false,
       },
-      trigger: null,
+      trigger: date,
     })
   }
 
